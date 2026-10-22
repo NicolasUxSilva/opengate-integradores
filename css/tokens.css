@@ -1,0 +1,64 @@
+/* =========================================
+   TOKENS — valores extraídos da página original
+   (integradores-opengate.framer.website)
+========================================= */
+
+:root {
+  /* Marca */
+  --navy-900: #06283b;
+  --navy-800: #093954;
+  --navy-700: #0d4b6b;
+  --green-500: #92b110;
+  --green-600: #7c960e;
+  --green-form: #99bc08;
+  --navy-form: #0b3b59;
+
+  /* Texto */
+  --text-body: #45556c;
+  --text-list: #314157;
+  --text-muted: #61738d;
+  --text-on-dark: rgba(255, 254, 254, 0.7);
+  --text-footer: rgba(255, 254, 254, 0.5);
+
+  /* Perfil (sim / não) */
+  --yes-title: #007955;
+  --yes-bg: rgba(235, 252, 244, 0.5);
+  --no-title: #e7000a;
+  --no-bg: rgba(254, 242, 242, 0.5);
+
+  /* Fundos */
+  --white: #ffffff;
+  --header-bg: rgba(255, 254, 254, 0.8);
+  --card-dark-bg: rgba(255, 254, 254, 0.05);
+  --gradient-steps: linear-gradient(166deg, var(--navy-700) 0%, var(--navy-800) 50%, var(--navy-900) 100%);
+  --gradient-features: linear-gradient(163deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
+
+  /* Sombras */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-step: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --shadow-cta: 0 10px 15px -3px rgba(146, 176, 15, 0.25), 0 4px 6px -4px rgba(146, 176, 15, 0.25);
+
+  /* Tipografia */
+  --font-base: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-form: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Arial, sans-serif;
+
+  /* Layout */
+  --container: 1104px;
+  --gutter: 24px;
+  --section-pad: 96px;
+  --radius-card: 22px;
+  --header-h: 73px;
+}
+
+@media (min-width: 1100px) {
+  :root {
+    --section-pad: 128px;
+  }
+}
+
+@media (max-width: 1099.98px) {
+  :root {
+    --gradient-steps: linear-gradient(98deg, var(--navy-700) 0%, var(--navy-800) 50%, var(--navy-900) 100%);
+    --gradient-features: linear-gradient(94deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
+  }
+}

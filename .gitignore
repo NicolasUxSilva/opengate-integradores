@@ -1,0 +1,20 @@
+# Dependências e builds (o projeto não usa nenhum hoje)
+node_modules/
+dist/
+build/
+.cache/
+
+# Ambiente e credenciais
+.env
+.env.*
+
+# Configuração local de ferramentas
+.claude/
+.vercel/
+.vscode/
+.idea/
+
+# Sistema e logs
+.DS_Store
+*.log
+npm-debug.log*
