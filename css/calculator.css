@@ -3,9 +3,10 @@
    Usa os tokens e padrões de card já existentes na página.
 ========================================= */
 
-/* O hero já termina com respiro próprio; a seção começa direto no cabeçalho. */
+/* A seção seguinte ("Perfil") também é branca e já abre com respiro próprio;
+   sem padding inferior aqui o espaço entre as duas não dobra. */
 .calculator {
-  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .calculator__grid {

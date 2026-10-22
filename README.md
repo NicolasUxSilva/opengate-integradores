@@ -1,7 +1,7 @@
 # OpenGate — Landing page de integradores
 
 Reconstrução de https://integradores-opengate.framer.website/ em HTML, CSS e JS puros, sem dependências,
-com uma calculadora de ganho anual adicionada logo após o hero.
+com uma calculadora de ganho anual adicionada logo após a seção "Como funciona a parceria".
 
 ## Rodar
 
@@ -48,6 +48,6 @@ por instalação, mês de início da recorrência, cancelamento mensal) ficam em
 
 - CTAs de conversão (`data-cta="header"`, `"hero"`, `"calculator"`) levam a `#seja-parceiro`, com rolagem suave.
 - A logo do cabeçalho leva a https://opengatebr.com.
-- Âncoras das seções: `#inicio`, `#calculadora`, `#como-funciona`, `#perfil`, `#diferenciais`, `#seja-parceiro`.
+- Âncoras das seções: `#inicio`, `#como-funciona`, `#calculadora`, `#perfil`, `#diferenciais`, `#seja-parceiro`.
 - Envio do formulário: `PARTNER_FORM_ACTION` em `js/main.js` (vazio = envio bloqueado, como no original).
   Campos: `nome`, `empresa`, `receita_recorrente`, `seguranca_eletronica`, `carteira_clientes`.
