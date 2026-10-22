@@ -1,5 +1,5 @@
 // Landing page de integradores OpenGate.
-// Reproduz apenas o comportamento da página original; interações novas entram aqui depois.
+import { initCalculator } from './calculator-ui.js';
 
 // URL de envio do formulário. No original ("Form URL" do componente Framer) está vazia,
 // então o envio é bloqueado após a validação nativa dos campos obrigatórios.
@@ -20,5 +20,6 @@ function initPartnerForm() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initCalculator(document.querySelector('[data-calculator]'));
   initPartnerForm();
 });

@@ -30,6 +30,11 @@
   gap: 12px;
 }
 
+.site-header__home {
+  display: block;
+  border-radius: 6px;
+}
+
 .site-header__logo {
   width: 140px;
   height: 32px;

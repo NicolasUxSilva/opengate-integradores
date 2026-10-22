@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/calculator.css">
   <link rel="stylesheet" href="css/form.css">
-  <script src="js/main.js" defer></script>
+  <script type="module" src="js/main.js"></script>
 </head>
 <body>
 
@@ -72,11 +73,12 @@
   <header class="site-header">
     <div class="container site-header__inner">
       <div class="site-header__brand">
-        <img class="site-header__logo" src="assets/img/logo-opengate.png" alt="OpenGate" width="140" height="32">
+        <a class="site-header__home" href="https://opengatebr.com">
+          <img class="site-header__logo" src="assets/img/logo-opengate.png" alt="OpenGate" width="140" height="32">
+        </a>
         <span class="site-header__tag">Parceiros</span>
       </div>
-      <!-- CTA sem destino na página original. Defina o href quando a interação for especificada. -->
-      <a class="btn btn--sm" data-cta="header">Quero ser parceiro</a>
+      <a class="btn btn--sm" href="#seja-parceiro" data-cta="header">Quero ser parceiro</a>
     </div>
   </header>
 
@@ -91,8 +93,7 @@
           <h1 class="hero__title">Você atua com segurança eletrônica e tem clientes?</h1>
           <p class="hero__lead">Descubra uma nova fonte de receita com a <strong>OpenGate</strong>.</p>
           <div class="hero__actions">
-            <!-- CTA sem destino na página original. Defina o href quando a interação for especificada. -->
-            <a class="btn btn--lg" data-cta="hero">
+            <a class="btn btn--lg" href="#seja-parceiro" data-cta="hero">
               Quero saber mais
               <svg aria-hidden="true"><use href="#icon-arrow"/></svg>
             </a>
@@ -102,6 +103,119 @@
         <div class="hero__media">
           <img src="assets/img/hero-instalador.png" alt="Instalador uniformizado configurando uma fechadura inteligente OpenGate em porta de vidro" width="542" height="542">
         </div>
+      </div>
+    </section>
+
+    <!-- ========== CALCULADORA DE GANHO ANUAL ==========
+         Valores e premissas: js/calculator-config.js · cálculo: js/calculator.js · interface: js/calculator-ui.js
+         Os números abaixo são o estado inicial; o JS recalcula a cada movimento dos sliders. -->
+    <section class="section calculator" id="calculadora">
+      <div class="container">
+        <div class="section-head">
+          <span class="badge">Simulador de ganhos</span>
+          <h2>Calcule quanto você pode<br class="br-desktop"> ganhar com a OpenGate</h2>
+          <p>Ajuste os controles e veja, na hora, uma estimativa do seu ganho no primeiro ano como parceiro.</p>
+        </div>
+
+        <div class="calculator__grid" data-calculator>
+          <div class="calc-controls">
+            <div class="calc-field" data-field="unitsPerMonth">
+              <div class="calc-field__head">
+                <label class="calc-field__label" for="calc-units">Novas instalações por mês</label>
+                <output class="calc-field__value" for="calc-units">1 por mês</output>
+              </div>
+              <input class="calc-range" id="calc-units" type="range" min="1" max="30" step="1" value="1">
+              <div class="calc-field__scale"><span data-scale="min">1</span><span data-scale="max">30</span></div>
+            </div>
+
+            <div class="calc-field" data-field="installFee">
+              <div class="calc-field__head">
+                <label class="calc-field__label" for="calc-install">Ganho por instalação</label>
+                <output class="calc-field__value" for="calc-install">R$ 600,00</output>
+              </div>
+              <input class="calc-range" id="calc-install" type="range" min="0" max="1500" step="10" value="600">
+              <div class="calc-field__scale"><span data-scale="min">R$ 0</span><span data-scale="max">R$ 1.500</span></div>
+            </div>
+
+            <div class="calc-field" data-field="deploymentFee">
+              <div class="calc-field__head">
+                <label class="calc-field__label" for="calc-deployment">Ganho por implantação/integração</label>
+                <output class="calc-field__value" for="calc-deployment">R$ 380,00</output>
+              </div>
+              <input class="calc-range" id="calc-deployment" type="range" min="0" max="1000" step="10" value="380">
+              <div class="calc-field__scale"><span data-scale="min">R$ 0</span><span data-scale="max">R$ 1.000</span></div>
+            </div>
+
+            <div class="calc-field" data-field="recurringFee">
+              <div class="calc-field__head">
+                <label class="calc-field__label" for="calc-recurring">Recorrência por aparelho ativo</label>
+                <output class="calc-field__value" for="calc-recurring">R$ 30,00/mês</output>
+              </div>
+              <input class="calc-range" id="calc-recurring" type="range" min="0" max="100" step="1" value="30">
+              <div class="calc-field__scale"><span data-scale="min">R$ 0</span><span data-scale="max">R$ 100</span></div>
+            </div>
+
+            <p class="calc-controls__summary" aria-hidden="true">
+              <span>Ganho anual estimado</span>
+              <strong data-result="totalCompact">R$ 14.100,00</strong>
+            </p>
+
+            <p class="calc-controls__note" data-assumptions>Premissas: projeção de 12 meses; cada nova instalação gera 1 implantação e 1 aparelho ativo; a recorrência começa no mês da instalação, sem cancelamentos.</p>
+          </div>
+
+          <div class="calc-result">
+            <p class="calc-result__label" id="calc-total-label">Seu ganho anual estimado com a OpenGate</p>
+            <p class="calc-result__total" data-result="total" aria-live="polite">R$ 14.100<small>,00</small></p>
+
+            <div class="calc-result__bar" aria-hidden="true">
+              <span class="calc-result__bar-install" data-bar="install"></span>
+              <span class="calc-result__bar-deployment" data-bar="deployment"></span>
+              <span class="calc-result__bar-recurring" data-bar="recurring"></span>
+            </div>
+
+            <dl class="calc-breakdown">
+              <div class="calc-breakdown__row">
+                <dt><span class="calc-dot calc-dot--install"></span>Instalações no ano</dt>
+                <dd data-result="install">R$ 7.200,00</dd>
+              </div>
+              <div class="calc-breakdown__row">
+                <dt><span class="calc-dot calc-dot--deployment"></span>Implantação/integração no ano</dt>
+                <dd data-result="deployment">R$ 4.560,00</dd>
+              </div>
+              <div class="calc-breakdown__row">
+                <dt><span class="calc-dot calc-dot--recurring"></span><span>Recorrência acumulada em <span data-months>12</span> meses</span></dt>
+                <dd data-result="recurring">R$ 2.340,00</dd>
+              </div>
+              <div class="calc-breakdown__row calc-breakdown__row--total">
+                <dt>Total estimado no ano</dt>
+                <dd data-result="sum">R$ 14.100,00</dd>
+              </div>
+            </dl>
+
+            <div class="calc-stats">
+              <div class="calc-stat">
+                <span class="calc-stat__value" data-result="newUnits">12</span>
+                <span class="calc-stat__label">novas instalações no período</span>
+              </div>
+              <div class="calc-stat">
+                <span class="calc-stat__value" data-result="portfolio">12</span>
+                <span class="calc-stat__label"><span data-result="portfolioUnit">aparelhos</span> na carteira ao fim de <span data-months>12</span> meses</span>
+              </div>
+            </div>
+
+            <p class="calc-result__monthly">
+              <span>Recorrência mensal no fim do período: <strong data-result="monthlyEnd">R$ 360,00/mês</strong></span>
+              <span class="calc-result__monthly-hint">É quanto a carteira passa a render por mês ao final da projeção, e não o valor acumulado no ano.</span>
+            </p>
+
+            <a class="btn btn--lg calc-result__cta" href="#seja-parceiro" data-cta="calculator">
+              Quero ser parceiro
+              <svg aria-hidden="true"><use href="#icon-arrow"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <p class="calculator__disclaimer">Valores meramente ilustrativos. A estimativa pode variar conforme o volume de projetos, as condições comerciais e a remuneração efetivamente aplicável, e não representa proposta ou garantia de ganho.</p>
       </div>
     </section>
 
