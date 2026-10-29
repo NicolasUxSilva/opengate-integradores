@@ -338,10 +338,11 @@
         <div class="contact__form">
           <div class="partner-card">
             <!--
-              Como no original, o formulário não tem destino configurado:
-              o envio é interceptado em js/main.js (PARTNER_FORM_ACTION).
+              Envio por e-mail via FormSubmit (formsubmit.co). Com JS, js/main.js envia em segundo plano
+              e mostra o resultado aqui; sem JS, o action abaixo envia direto ao serviço.
+              Destino configurado em js/main.js (PARTNER_FORM_EMAIL) e neste action.
             -->
-            <form class="partner-form" id="partner-form" method="POST">
+            <form class="partner-form" id="partner-form" method="POST" action="https://formsubmit.co/marcio@msserver.com.br">
               <div class="top-fields">
                 <div class="field-group">
                   <label class="field-label" for="nome">Nome completo</label>
@@ -377,10 +378,15 @@
                 </div>
               </div>
 
+              <!-- Armadilha anti-spam do FormSubmit: pessoas não veem nem preenchem este campo. -->
+              <input class="form-honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+
               <button class="submit-button" type="submit">
-                <span>Quero ser parceiro</span>
+                <span data-submit-label>Quero ser parceiro</span>
                 <span class="arrow" aria-hidden="true">→</span>
               </button>
+
+              <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
             </form>
           </div>
         </div>

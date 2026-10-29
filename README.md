@@ -49,5 +49,10 @@ por instalação, mês de início da recorrência, cancelamento mensal) ficam em
 - CTAs de conversão (`data-cta="header"`, `"hero"`, `"calculator"`) levam a `#seja-parceiro`, com rolagem suave.
 - A logo do cabeçalho leva a https://opengatebr.com.
 - Âncoras das seções: `#inicio`, `#como-funciona`, `#calculadora`, `#perfil`, `#diferenciais`, `#seja-parceiro`.
-- Envio do formulário: `PARTNER_FORM_ACTION` em `js/main.js` (vazio = envio bloqueado, como no original).
-  Campos: `nome`, `empresa`, `receita_recorrente`, `seguranca_eletronica`, `carteira_clientes`.
+- Envio do formulário: por e-mail para `marcio@msserver.com.br`, via [FormSubmit](https://formsubmit.co).
+  O destino fica em `PARTNER_FORM_EMAIL` (`js/main.js`) e no `action` do formulário em `index.html`
+  (usado quando o JS não carrega); ao trocar o e-mail, altere os dois.
+  No primeiro envio para um endereço novo, o FormSubmit manda a esse endereço um e-mail de ativação:
+  os cadastros só são entregues depois que o link for confirmado.
+  Campos: `nome`, `empresa`, `receita_recorrente`, `seguranca_eletronica`, `carteira_clientes`
+  (mais `_honey`, armadilha anti-spam).

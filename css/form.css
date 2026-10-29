@@ -205,6 +205,42 @@
   font-weight: 400;
 }
 
+.submit-button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+  transform: none;
+}
+
+/* ---------- Envio: anti-spam e mensagens ---------- */
+
+.form-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.form-status {
+  margin: 20px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.form-status[data-state="success"] {
+  background: rgba(153, 188, 8, 0.15);
+  color: var(--navy-form);
+}
+
+.form-status[data-state="error"] {
+  background: rgba(231, 0, 10, 0.08);
+  color: #b0000a;
+}
+
 /* =========================================
    DESKTOP — card 720 x 780
 ========================================= */
@@ -280,5 +316,9 @@
   .submit-button .arrow {
     margin-top: -1px;
     font-size: 25px;
+  }
+
+  .form-status {
+    margin: 20px 16px 0;
   }
 }
