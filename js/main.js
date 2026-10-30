@@ -12,8 +12,25 @@ const PARTNER_FORM_SUBJECT = 'Novo interessado — Programa de Parceiros OpenGat
 
 const STATUS_MESSAGES = {
   success: 'Recebemos seus dados! Nossa equipe entra em contato em breve para apresentar o programa.',
-  error: 'Não foi possível enviar agora. Tente novamente em instantes.',
+  error: 'Não foi possível enviar pelo site agora. Envie seus dados por e-mail — a mensagem já vem preenchida:',
 };
+
+// Rótulos usados no e-mail de contingência (mailto), na ordem do formulário.
+const FIELD_LABELS = {
+  nome: 'Nome completo',
+  empresa: 'Empresa',
+  receita_recorrente: 'Tem interesse em uma nova fonte de receita recorrente?',
+  seguranca_eletronica: 'Você já instala ou trabalha com dispositivos de segurança eletrônica?',
+  carteira_clientes: 'Você tem uma carteira ativa de clientes?',
+};
+
+// Se o serviço de envio falhar, o visitante ainda consegue mandar os dados pelo próprio e-mail.
+function buildMailtoLink(data) {
+  const lines = Object.entries(FIELD_LABELS).map(([name, label]) => `${label}: ${data[name] || '—'}`);
+  const params = new URLSearchParams({ subject: PARTNER_FORM_SUBJECT, body: lines.join('\n') });
+  // URLSearchParams codifica espaço como "+", que clientes de e-mail não convertem de volta.
+  return `mailto:${PARTNER_FORM_EMAIL}?${params.toString().replace(/\+/g, '%20')}`;
+}
 
 function initPartnerForm() {
   const form = document.getElementById('partner-form');
@@ -24,8 +41,15 @@ function initPartnerForm() {
   const status = form.querySelector('[data-form-status]');
   const idleLabel = label.textContent;
 
-  const showStatus = (type) => {
+  const showStatus = (type, mailto) => {
     status.textContent = STATUS_MESSAGES[type];
+    if (mailto) {
+      const link = document.createElement('a');
+      link.className = 'form-status__action';
+      link.href = mailto;
+      link.textContent = 'Enviar por e-mail';
+      status.append(link);
+    }
     status.dataset.state = type;
     status.hidden = false;
   };
@@ -58,7 +82,7 @@ function initPartnerForm() {
       showStatus('success');
     } catch (error) {
       console.warn('Falha no envio do formulário de parceiros:', error);
-      showStatus('error');
+      showStatus('error', buildMailtoLink(data));
     } finally {
       button.disabled = false;
       label.textContent = idleLabel;
