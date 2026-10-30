@@ -49,10 +49,11 @@ por instalação, mês de início da recorrência, cancelamento mensal) ficam em
 - CTAs de conversão (`data-cta="header"`, `"hero"`, `"calculator"`) levam a `#seja-parceiro`, com rolagem suave.
 - A logo do cabeçalho leva a https://opengatebr.com.
 - Âncoras das seções: `#inicio`, `#como-funciona`, `#calculadora`, `#perfil`, `#diferenciais`, `#seja-parceiro`.
-- Envio do formulário: por e-mail para `marcio@msserver.com.br`, via [FormSubmit](https://formsubmit.co).
-  O destino fica em `PARTNER_FORM_EMAIL` (`js/main.js`) e no `action` do formulário em `index.html`
-  (usado quando o JS não carrega); ao trocar o e-mail, altere os dois.
-  No primeiro envio para um endereço novo, o FormSubmit manda a esse endereço um e-mail de ativação:
-  os cadastros só são entregues depois que o link for confirmado.
-  Campos: `nome`, `empresa`, `receita_recorrente`, `seguranca_eletronica`, `carteira_clientes`
-  (mais `_honey`, armadilha anti-spam).
+- Envio do formulário: por e-mail para `marcio@msserver.com.br`, via [Web3Forms](https://web3forms.com).
+  O destino é o e-mail cadastrado no Web3Forms junto com a chave, que fica no campo oculto `access_key`
+  do formulário em `index.html` (a chave é pública por design). Para trocar o destino, gere uma chave
+  nova em web3forms.com com o novo e-mail e atualize também `PARTNER_FORM_EMAIL` em `js/main.js`.
+- Contingência: se o envio falhar, a página oferece "Enviar por e-mail", que abre o app de e-mail do
+  visitante com uma mensagem para `PARTNER_FORM_EMAIL` já preenchida.
+- Campos: `nome`, `empresa`, `receita_recorrente`, `seguranca_eletronica`, `carteira_clientes`
+  (mais `botcheck`, armadilha anti-spam). `npm run check` falha se a `access_key` estiver vazia.

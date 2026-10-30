@@ -1,14 +1,15 @@
 // Landing page de integradores OpenGate.
 import { initCalculator } from './calculator-ui.js';
 
-// Destino dos cadastros de parceiros. O envio passa pelo FormSubmit (formsubmit.co),
-// que repassa os dados por e-mail. Ao trocar o e-mail, atualize também o action do
-// formulário em index.html (usado quando o JS não carrega).
-// Atenção: no primeiro envio para um endereço novo, o FormSubmit manda a esse endereço
-// um e-mail de ativação; até ele ser confirmado, os cadastros não são entregues.
-const PARTNER_FORM_EMAIL = 'marcio@msserver.com.br';
-const PARTNER_FORM_ENDPOINT = `https://formsubmit.co/ajax/${PARTNER_FORM_EMAIL}`;
+// Envio dos cadastros de parceiros pelo Web3Forms (web3forms.com), que repassa os dados
+// por e-mail. A chave (campo oculto access_key em index.html) define o e-mail de destino.
+const PARTNER_FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 const PARTNER_FORM_SUBJECT = 'Novo interessado — Programa de Parceiros OpenGate';
+const PARTNER_FORM_SENDER = 'Landing page de integradores OpenGate';
+
+// Destino do e-mail de contingência (mailto), usado quando o envio pelo site falha.
+// Mantenha igual ao e-mail cadastrado no Web3Forms.
+const PARTNER_FORM_EMAIL = 'marcio@msserver.com.br';
 
 const STATUS_MESSAGES = {
   success: 'Recebemos seus dados! Nossa equipe entra em contato em breve para apresentar o programa.',
@@ -61,8 +62,8 @@ function initPartnerForm() {
     const data = Object.fromEntries(new FormData(form));
     const payload = {
       ...data,
-      _subject: PARTNER_FORM_SUBJECT,
-      _template: 'table',
+      subject: PARTNER_FORM_SUBJECT,
+      from_name: PARTNER_FORM_SENDER,
     };
 
     button.disabled = true;
@@ -70,6 +71,8 @@ function initPartnerForm() {
     status.hidden = true;
 
     try {
+      if (!data.access_key) throw new Error('access_key do Web3Forms não configurada em index.html');
+
       const response = await fetch(PARTNER_FORM_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },

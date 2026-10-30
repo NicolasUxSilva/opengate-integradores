@@ -338,11 +338,14 @@
         <div class="contact__form">
           <div class="partner-card">
             <!--
-              Envio por e-mail via FormSubmit (formsubmit.co). Com JS, js/main.js envia em segundo plano
+              Envio por e-mail via Web3Forms (web3forms.com). Com JS, js/main.js envia em segundo plano
               e mostra o resultado aqui; sem JS, o action abaixo envia direto ao serviço.
-              Destino configurado em js/main.js (PARTNER_FORM_EMAIL) e neste action.
+              O e-mail de destino é o cadastrado no Web3Forms junto com a access_key abaixo
+              (a chave é pública por design). Para trocar o destino, gere uma nova chave.
             -->
-            <form class="partner-form" id="partner-form" method="POST" action="https://formsubmit.co/marcio@msserver.com.br">
+            <form class="partner-form" id="partner-form" method="POST" action="https://api.web3forms.com/submit">
+              <input type="hidden" name="access_key" value="2668971c-91d8-451e-9732-731d2879a7b4">
+
               <div class="top-fields">
                 <div class="field-group">
                   <label class="field-label" for="nome">Nome completo</label>
@@ -378,8 +381,8 @@
                 </div>
               </div>
 
-              <!-- Armadilha anti-spam do FormSubmit: pessoas não veem nem preenchem este campo. -->
-              <input class="form-honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <!-- Armadilha anti-spam do Web3Forms: pessoas não veem nem preenchem este campo. -->
+              <input class="form-honeypot" type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
 
               <button class="submit-button" type="submit">
                 <span data-submit-label>Quero ser parceiro</span>

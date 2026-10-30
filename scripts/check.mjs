@@ -29,6 +29,9 @@ for (const [tag] of html.matchAll(/<a\s[^>]*>/g)) {
   if (!/\shref="[^"]+"/.test(tag)) errors.push(`link sem destino: ${tag}`);
 }
 
+// O formulário só entrega e-mails com a chave do Web3Forms preenchida.
+if (!/name="access_key" value="[^"]+"/.test(html)) errors.push('formulário: access_key do Web3Forms vazia em index.html');
+
 const jsFiles = ['js/main.js', 'js/calculator.js', 'js/calculator-config.js', 'js/calculator-ui.js', 'scripts/serve.mjs'];
 for (const file of jsFiles) {
   try {
