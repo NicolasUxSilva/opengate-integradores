@@ -9,7 +9,7 @@ const PARTNER_FORM_SENDER = 'Landing page de integradores OpenGate';
 
 // Destino do e-mail de contingência (mailto), usado quando o envio pelo site falha.
 // Mantenha igual ao e-mail cadastrado no Web3Forms.
-const PARTNER_FORM_EMAIL = 'marcio@msserver.com.br';
+const PARTNER_FORM_EMAIL = 'suporte@msserver.com.br';
 
 const STATUS_MESSAGES = {
   success: 'Recebemos seus dados! Nossa equipe entra em contato em breve para apresentar o programa.',

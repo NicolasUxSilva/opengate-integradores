@@ -49,7 +49,7 @@ por instalação, mês de início da recorrência, cancelamento mensal) ficam em
 - CTAs de conversão (`data-cta="header"`, `"hero"`, `"calculator"`) levam a `#seja-parceiro`, com rolagem suave.
 - A logo do cabeçalho leva a https://opengatebr.com.
 - Âncoras das seções: `#inicio`, `#como-funciona`, `#calculadora`, `#perfil`, `#diferenciais`, `#seja-parceiro`.
-- Envio do formulário: por e-mail para `marcio@msserver.com.br`, via [Web3Forms](https://web3forms.com).
+- Envio do formulário: por e-mail para `suporte@msserver.com.br`, via [Web3Forms](https://web3forms.com).
   O destino é o e-mail cadastrado no Web3Forms junto com a chave, que fica no campo oculto `access_key`
   do formulário em `index.html` (a chave é pública por design). Para trocar o destino, gere uma chave
   nova em web3forms.com com o novo e-mail e atualize também `PARTNER_FORM_EMAIL` em `js/main.js`.
