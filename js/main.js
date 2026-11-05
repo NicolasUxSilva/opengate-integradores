@@ -16,6 +16,28 @@ const STATUS_MESSAGES = {
   error: 'Não foi possível enviar pelo site agora. Envie seus dados por e-mail — a mensagem já vem preenchida:',
 };
 
+// Origem do visitante para o evento Lead: "diagnostico" quando veio do CTA do diagnóstico
+// (que acrescenta origem=diagnostico à URL), senão "direto". Nenhum dado pessoal vai ao Pixel.
+function trafficOrigin() {
+  try {
+    return new URLSearchParams(window.location.search).get('origem') === 'diagnostico' ? 'diagnostico' : 'direto';
+  } catch {
+    return 'direto';
+  }
+}
+
+// Evento de conversão da campanha: só depois que o Web3Forms confirmou o envio (success === true).
+// Cada envio confirmado gera um único Lead, com eventID próprio para a Meta deduplicar repetições
+// do mesmo envio. Um novo envio válido (outra pessoa ou novo contato) é um novo Lead.
+function trackLead() {
+  try {
+    const eventID = `lead-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    window.fbq?.('track', 'Lead', { content_name: 'Programa de Parceiros OpenGate', origem: trafficOrigin() }, { eventID });
+  } catch {
+    // Mensuração nunca deve atrapalhar o envio.
+  }
+}
+
 // Rótulos dos campos no e-mail recebido e no e-mail de contingência, na ordem do formulário.
 const FIELD_LABELS = {
   nome: 'Nome completo',
@@ -64,9 +86,13 @@ function initPartnerForm() {
     status.hidden = false;
   };
 
+  let submitting = false;
+
   // Só chega aqui depois da validação nativa (nome e empresa obrigatórios).
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (submitting) return; // impede envio duplo (e Lead duplo) enquanto o primeiro está em andamento
+    submitting = true;
 
     const data = Object.fromEntries(new FormData(form));
     const payload = {
@@ -94,10 +120,13 @@ function initPartnerForm() {
 
       form.reset();
       showStatus('success');
+      // Armadilha anti-spam preenchida = robô: não conta como Lead.
+      if (!data.botcheck) trackLead();
     } catch (error) {
       console.warn('Falha no envio do formulário de parceiros:', error);
       showStatus('error', buildMailtoLink(data));
     } finally {
+      submitting = false;
       button.disabled = false;
       label.textContent = idleLabel;
     }

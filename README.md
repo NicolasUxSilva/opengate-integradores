@@ -57,3 +57,19 @@ por instalação, mês de início da recorrência, cancelamento mensal) ficam em
   visitante com uma mensagem para `PARTNER_FORM_EMAIL` já preenchida.
 - Campos: `nome`, `empresa`, `receita_recorrente`, `seguranca_eletronica`, `carteira_clientes`
   (mais `botcheck`, armadilha anti-spam). `npm run check` falha se a `access_key` estiver vazia.
+
+## Mensuração (Meta Pixel)
+
+- Pixel **Pixel Site OpenGate (`351480523756375`)**, o mesmo do diagnóstico, no `<head>` de `index.html`
+  (com `noscript`). Envia um `PageView` por carregamento; a página é estática, sem navegação client-side.
+- **`Lead`** (evento padrão, conversão da campanha) é disparado em `js/main.js` **somente** depois que o
+  Web3Forms responde `success: true`. Não dispara ao carregar, ao clicar em enviar, com campos obrigatórios
+  vazios, com erro HTTP, com `success: false`, sem conexão nem com a armadilha anti-spam preenchida.
+- Deduplicação: um envio por vez (botão desabilitado + trava `submitting`) e um `eventID` único por envio
+  confirmado. Um novo envio válido conta como um novo `Lead`.
+- Parâmetros do `Lead`: `content_name` e `origem` (`diagnostico` quando a URL tem `origem=diagnostico`, vinda do
+  CTA do diagnóstico; senão `direto`). Nenhum dado do formulário (nome, empresa, respostas) vai ao Pixel. As UTMs
+  ficam na URL e são lidas pelo próprio Pixel.
+- Sem JavaScript, o formulário envia direto ao Web3Forms e **não** gera `Lead`.
+- `npm run check` confere: um único `init` com o ID correto e `trackLead()` em um único ponto.
+- Sem banner de consentimento: avaliar a exigência de LGPD com o jurídico.

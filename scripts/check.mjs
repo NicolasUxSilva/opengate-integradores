@@ -32,6 +32,13 @@ for (const [tag] of html.matchAll(/<a\s[^>]*>/g)) {
 // O formulário só entrega e-mails com a chave do Web3Forms preenchida.
 if (!/name="access_key" value="[^"]+"/.test(html)) errors.push('formulário: access_key do Web3Forms vazia em index.html');
 
+// Meta Pixel: um único init, com o ID do "Pixel Site OpenGate", e Lead só no fluxo de sucesso do formulário.
+const pixelInits = [...html.matchAll(/fbq\('init',\s*'(\d+)'\)/g)].map((m) => m[1]);
+if (pixelInits.length !== 1 || pixelInits[0] !== '351480523756375') errors.push(`Meta Pixel: esperado 1 init com 351480523756375, encontrado ${JSON.stringify(pixelInits)}`);
+if (/'Lead'/.test(html)) errors.push('Meta Pixel: Lead não pode ser disparado no HTML (só após envio confirmado em js/main.js)');
+const mainJs = readFileSync(resolve(ROOT, 'js/main.js'), 'utf8');
+if ((mainJs.match(/trackLead\(\)/g) || []).length !== 2) errors.push('Meta Pixel: trackLead() deve ser chamado em um único ponto (após sucesso)');
+
 const jsFiles = ['js/main.js', 'js/calculator.js', 'js/calculator-config.js', 'js/calculator-ui.js', 'scripts/serve.mjs'];
 for (const file of jsFiles) {
   try {
