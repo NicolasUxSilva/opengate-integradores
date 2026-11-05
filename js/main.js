@@ -16,7 +16,7 @@ const STATUS_MESSAGES = {
   error: 'Não foi possível enviar pelo site agora. Envie seus dados por e-mail — a mensagem já vem preenchida:',
 };
 
-// Rótulos usados no e-mail de contingência (mailto), na ordem do formulário.
+// Rótulos dos campos no e-mail recebido e no e-mail de contingência, na ordem do formulário.
 const FIELD_LABELS = {
   nome: 'Nome completo',
   empresa: 'Empresa',
@@ -24,10 +24,19 @@ const FIELD_LABELS = {
   seguranca_eletronica: 'Você já instala ou trabalha com dispositivos de segurança eletrônica?',
   carteira_clientes: 'Você tem uma carteira ativa de clientes?',
 };
+const UNANSWERED = 'Não respondido';
+
+// Respostas com a pergunta por extenso. Perguntas sem opção marcada também entram
+// (o navegador omite rádios não marcados), para o e-mail sempre trazer as três.
+function labeledAnswers(data) {
+  return Object.fromEntries(
+    Object.entries(FIELD_LABELS).map(([name, label]) => [label, data[name] || UNANSWERED]),
+  );
+}
 
 // Se o serviço de envio falhar, o visitante ainda consegue mandar os dados pelo próprio e-mail.
 function buildMailtoLink(data) {
-  const lines = Object.entries(FIELD_LABELS).map(([name, label]) => `${label}: ${data[name] || '—'}`);
+  const lines = Object.entries(labeledAnswers(data)).map(([label, value]) => `${label}: ${value}`);
   const params = new URLSearchParams({ subject: PARTNER_FORM_SUBJECT, body: lines.join('\n') });
   // URLSearchParams codifica espaço como "+", que clientes de e-mail não convertem de volta.
   return `mailto:${PARTNER_FORM_EMAIL}?${params.toString().replace(/\+/g, '%20')}`;
@@ -61,7 +70,9 @@ function initPartnerForm() {
 
     const data = Object.fromEntries(new FormData(form));
     const payload = {
-      ...data,
+      access_key: data.access_key,
+      botcheck: data.botcheck,
+      ...labeledAnswers(data),
       subject: PARTNER_FORM_SUBJECT,
       from_name: PARTNER_FORM_SENDER,
     };
