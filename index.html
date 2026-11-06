@@ -365,6 +365,11 @@
                   <label class="field-label" for="empresa">Empresa</label>
                   <input class="text-input" id="empresa" type="text" name="empresa" placeholder="Nome da empresa" required>
                 </div>
+                <div class="field-group">
+                  <label class="field-label" for="whatsapp">WhatsApp ou telefone</label>
+                  <input class="text-input" id="whatsapp" type="tel" name="whatsapp" inputmode="tel" autocomplete="tel-national" placeholder="(11) 91234-5678" maxlength="20" aria-describedby="whatsapp-hint" required>
+                  <p class="field-hint" id="whatsapp-hint">Com DDD. É por aqui que nossa equipe vai falar com você.</p>
+                </div>
               </div>
 
               <div class="questions">
@@ -398,6 +403,8 @@
                 <span data-submit-label>Quero ser parceiro</span>
                 <span class="arrow" aria-hidden="true">→</span>
               </button>
+
+              <p class="form-privacy">Seus dados serão usados apenas para a equipe da OpenGate entrar em contato sobre o Programa de Parceiros.</p>
 
               <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
             </form>

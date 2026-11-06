@@ -1,5 +1,6 @@
 // Landing page de integradores OpenGate.
 import { initCalculator } from './calculator-ui.js';
+import { formatPhone, isValidPhone, PHONE_ERROR_MESSAGE } from './phone.js';
 
 // Envio dos cadastros de parceiros pelo Web3Forms (web3forms.com), que repassa os dados
 // por e-mail. A chave (campo oculto access_key em index.html) define o e-mail de destino.
@@ -42,6 +43,7 @@ function trackLead() {
 const FIELD_LABELS = {
   nome: 'Nome completo',
   empresa: 'Empresa',
+  whatsapp: 'WhatsApp / telefone',
   receita_recorrente: 'Tem interesse em uma nova fonte de receita recorrente?',
   seguranca_eletronica: 'Você já instala ou trabalha com dispositivos de segurança eletrônica?',
   carteira_clientes: 'Você tem uma carteira ativa de clientes?',
@@ -88,13 +90,39 @@ function initPartnerForm() {
 
   let submitting = false;
 
+  // WhatsApp/telefone: máscara enquanto digita e validação nativa (bloqueia o envio se inválido).
+  const phone = form.querySelector('#whatsapp');
+  const phoneHint = form.querySelector('#whatsapp-hint');
+  const phoneHintText = phoneHint.textContent;
+  const validatePhone = (showError) => {
+    const ok = !phone.value || isValidPhone(phone.value);
+    phone.setCustomValidity(ok ? '' : PHONE_ERROR_MESSAGE);
+    const visible = showError && !ok;
+    phone.setAttribute('aria-invalid', String(visible));
+    phoneHint.textContent = visible ? PHONE_ERROR_MESSAGE : phoneHintText;
+    if (visible) phoneHint.dataset.error = '';
+    else delete phoneHint.dataset.error;
+  };
+  phone.addEventListener('input', () => {
+    phone.value = formatPhone(phone.value);
+    validatePhone(phone.getAttribute('aria-invalid') === 'true');
+  });
+  phone.addEventListener('blur', () => validatePhone(Boolean(phone.value)));
+  form.addEventListener('invalid', (event) => { if (event.target === phone) validatePhone(Boolean(phone.value)); }, true);
+
   // Só chega aqui depois da validação nativa (nome e empresa obrigatórios).
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (submitting) return; // impede envio duplo (e Lead duplo) enquanto o primeiro está em andamento
+    validatePhone(true);
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
     submitting = true;
 
     const data = Object.fromEntries(new FormData(form));
+    data.whatsapp = formatPhone(data.whatsapp);
     const payload = {
       access_key: data.access_key,
       botcheck: data.botcheck,

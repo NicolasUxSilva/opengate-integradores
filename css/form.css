@@ -73,6 +73,22 @@
   box-shadow: 0 0 0 3px rgba(11, 55, 83, 0.06);
 }
 
+.text-input[aria-invalid="true"] {
+  border-color: #b0000a;
+}
+
+.field-hint {
+  margin: 0;
+  color: #6b7f99;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.field-hint[data-error] {
+  color: #b0000a;
+  font-weight: 600;
+}
+
 /* ---------- Perguntas Sim / Não ---------- */
 
 .questions {
@@ -221,6 +237,14 @@
   opacity: 0;
 }
 
+.form-privacy {
+  margin: 14px 0 0;
+  color: #6b7f99;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+}
+
 .form-status {
   margin: 20px 0 0;
   padding: 14px 16px;
@@ -273,6 +297,11 @@
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     margin-bottom: 42px;
+  }
+
+  /* WhatsApp ocupa a linha inteira abaixo de Nome e Empresa. */
+  .top-fields .field-group:nth-child(3) {
+    grid-column: 1 / -1;
   }
 
   .field-group {

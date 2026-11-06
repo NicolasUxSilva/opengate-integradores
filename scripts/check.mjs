@@ -7,6 +7,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { calculateEarnings, formatBRL } from '../js/calculator.js';
 import { CALCULATOR_CONFIG } from '../js/calculator-config.js';
+import { formatPhone, isValidPhone, phoneDigits } from '../js/phone.js';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(resolve(ROOT, 'index.html'), 'utf8').replace(/<!--[\s\S]*?-->/g, '');
@@ -39,7 +40,31 @@ if (/'Lead'/.test(html)) errors.push('Meta Pixel: Lead não pode ser disparado n
 const mainJs = readFileSync(resolve(ROOT, 'js/main.js'), 'utf8');
 if ((mainJs.match(/trackLead\(\)/g) || []).length !== 2) errors.push('Meta Pixel: trackLead() deve ser chamado em um único ponto (após sucesso)');
 
-const jsFiles = ['js/main.js', 'js/calculator.js', 'js/calculator-config.js', 'js/calculator-ui.js', 'scripts/serve.mjs'];
+// ---------- WhatsApp / telefone ----------
+if (!/id="whatsapp"[^>]*\srequired/.test(html)) errors.push('formulário: campo whatsapp obrigatório ausente');
+const phoneCases = [
+  // [entrada, válido?, máscara esperada]
+  ['11912345678', true, '(11) 91234-5678'],
+  ['(11) 91234-5678', true, '(11) 91234-5678'],
+  ['+55 11 91234-5678', true, '(11) 91234-5678'],
+  ['5511912345678', true, '(11) 91234-5678'],
+  ['011 91234-5678', true, '(11) 91234-5678'],
+  ['1131234567', true, '(11) 3123-4567'],
+  ['(21) 2345-6789', true, '(21) 2345-6789'],
+  ['1191234567', false, '(11) 9123-4567'],   // 8 dígitos começando com 9: incompleto
+  ['11812345678', false, '(11) 81234-5678'], // celular sem o 9
+  ['0191234567', false, '(19) 1234-567'],    // fixo começando com 1
+  ['912345678', false, '(91) 2345-678'],     // sem DDD
+  ['', false, ''],
+  ['abc', false, ''],
+];
+for (const [input, valid, mask] of phoneCases) {
+  if (isValidPhone(input) !== valid) errors.push(`telefone: isValidPhone(${JSON.stringify(input)}) deveria ser ${valid}`);
+  if (formatPhone(input) !== mask) errors.push(`telefone: formatPhone(${JSON.stringify(input)}) = ${JSON.stringify(formatPhone(input))}, esperado ${JSON.stringify(mask)}`);
+}
+if (phoneDigits('+55 (11) 91234-5678 ramal 99').length > 11) errors.push('telefone: phoneDigits deve limitar a 11 dígitos');
+
+const jsFiles = ['js/main.js', 'js/phone.js', 'js/calculator.js', 'js/calculator-config.js', 'js/calculator-ui.js', 'scripts/serve.mjs'];
 for (const file of jsFiles) {
   try {
     execFileSync(process.execPath, ['--check', resolve(ROOT, file)], { stdio: 'pipe' });
@@ -103,3 +128,4 @@ if (errors.length) {
 const r0 = calculateEarnings(initial, CALCULATOR_CONFIG);
 console.log('✓ referências, âncoras, links, JS e CSS ok');
 console.log(`✓ calculadora: ${scenarios.length + 1} cenários conferidos; valores iniciais da config = ${formatBRL(r0.total)} no ano`);
+console.log(`✓ WhatsApp/telefone: ${phoneCases.length} cenários de máscara e validação conferidos`);

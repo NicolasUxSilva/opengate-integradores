@@ -55,7 +55,8 @@ por instalação, mês de início da recorrência, cancelamento mensal) ficam em
   nova em web3forms.com com o novo e-mail e atualize também `PARTNER_FORM_EMAIL` em `js/main.js`.
 - Contingência: se o envio falhar, a página oferece "Enviar por e-mail", que abre o app de e-mail do
   visitante com uma mensagem para `PARTNER_FORM_EMAIL` já preenchida.
-- Campos: `nome`, `empresa`, `receita_recorrente`, `seguranca_eletronica`, `carteira_clientes`
+- Campos: `nome`, `empresa`, `whatsapp` (obrigatório, máscara e validação de DDD + fixo/celular em
+  `js/phone.js`), `receita_recorrente`, `seguranca_eletronica`, `carteira_clientes`
   (mais `botcheck`, armadilha anti-spam). `npm run check` falha se a `access_key` estiver vazia.
 
 ## Mensuração (Meta Pixel)
@@ -72,4 +73,6 @@ por instalação, mês de início da recorrência, cancelamento mensal) ficam em
   ficam na URL e são lidas pelo próprio Pixel.
 - Sem JavaScript, o formulário envia direto ao Web3Forms e **não** gera `Lead`.
 - `npm run check` confere: um único `init` com o ID correto e `trackLead()` em um único ponto.
-- Sem banner de consentimento: avaliar a exigência de LGPD com o jurídico.
+- Sem banner de consentimento: avaliar a exigência de LGPD com o jurídico. O formulário informa que os dados
+  servem só para o contato comercial; não há link de política de privacidade porque não foi encontrada uma
+  página oficial (opengatebr.com não tem). Incluir o link quando existir.
