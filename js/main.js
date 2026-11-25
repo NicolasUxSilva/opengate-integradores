@@ -1,12 +1,14 @@
 // Landing page de integradores OpenGate.
 import { initCalculator } from './calculator-ui.js';
 import { formatPhone, isValidPhone, PHONE_ERROR_MESSAGE } from './phone.js';
+import { captureCampaignParams, fillHiddenFields, TRACKED_PARAMS } from './utm.js';
 
 // Envio dos cadastros de parceiros pelo Web3Forms (web3forms.com), que repassa os dados
 // por e-mail. A chave (campo oculto access_key em index.html) define o e-mail de destino.
 const PARTNER_FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 const PARTNER_FORM_SUBJECT = 'Novo interessado — Programa de Parceiros OpenGate';
 const PARTNER_FORM_SENDER = 'Landing page de integradores OpenGate';
+const PAGE_ID = 'lp-integradores';
 
 // Destino do e-mail de contingência (mailto), usado quando o envio pelo site falha.
 // Mantenha igual ao e-mail cadastrado no Web3Forms.
@@ -34,6 +36,24 @@ function trackLead() {
   try {
     const eventID = `lead-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
     window.fbq?.('track', 'Lead', { content_name: 'Programa de Parceiros OpenGate', origem: trafficOrigin() }, { eventID });
+    return eventID;
+  } catch {
+    // Mensuração nunca deve atrapalhar o envio.
+    return null;
+  }
+}
+
+// Perfil-alvo: as três respostas "Sim" (interesse em recorrência, já instala segurança, tem carteira).
+export function isQualifiedLead(data) {
+  return ['receita_recorrente', 'seguranca_eletronica', 'carteira_clientes'].every((name) => data[name] === 'Sim');
+}
+
+// Evento personalizado para medir a qualidade dos leads, disparado junto com o Lead (mesmo envio
+// confirmado) quando o perfil é o desejado. Não é usado para otimizar a campanha.
+function trackQualifiedLead(leadEventID) {
+  try {
+    const eventID = leadEventID ? `${leadEventID}-q` : undefined;
+    window.fbq?.('trackCustom', 'LeadQualificado', { content_name: 'Programa de Parceiros OpenGate', origem: trafficOrigin() }, eventID ? { eventID } : undefined);
   } catch {
     // Mensuração nunca deve atrapalhar o envio.
   }
@@ -44,6 +64,7 @@ const FIELD_LABELS = {
   nome: 'Nome completo',
   empresa: 'Empresa',
   whatsapp: 'WhatsApp / telefone',
+  cidade: 'Cidade / UF',
   receita_recorrente: 'Tem interesse em uma nova fonte de receita recorrente?',
   seguranca_eletronica: 'Você já instala ou trabalha com dispositivos de segurança eletrônica?',
   carteira_clientes: 'Você tem uma carteira ativa de clientes?',
@@ -89,6 +110,8 @@ function initPartnerForm() {
   };
 
   let submitting = false;
+  const campaign = captureCampaignParams();
+  fillHiddenFields(form, campaign);
 
   // WhatsApp/telefone: máscara enquanto digita e validação nativa (bloqueia o envio se inválido).
   const phone = form.querySelector('#whatsapp');
@@ -127,6 +150,10 @@ function initPartnerForm() {
       access_key: data.access_key,
       botcheck: data.botcheck,
       ...labeledAnswers(data),
+      'Perfil (3 respostas Sim)': isQualifiedLead(data) ? 'Sim' : 'Não',
+      'Consentimento LGPD': data.consentimento === 'Sim' ? `Sim (${new Date().toISOString()})` : 'Não',
+      Página: PAGE_ID,
+      ...Object.fromEntries(TRACKED_PARAMS.map((key) => [key, data[key] || ''])),
       subject: PARTNER_FORM_SUBJECT,
       from_name: PARTNER_FORM_SENDER,
     };
@@ -149,7 +176,11 @@ function initPartnerForm() {
       form.reset();
       showStatus('success');
       // Armadilha anti-spam preenchida = robô: não conta como Lead.
-      if (!data.botcheck) trackLead();
+      if (!data.botcheck) {
+        const leadEventID = trackLead();
+        if (isQualifiedLead(data)) trackQualifiedLead(leadEventID);
+      }
+      fillHiddenFields(form, campaign); // form.reset() limpa os ocultos; mantém a origem para um novo envio
     } catch (error) {
       console.warn('Falha no envio do formulário de parceiros:', error);
       showStatus('error', buildMailtoLink(data));

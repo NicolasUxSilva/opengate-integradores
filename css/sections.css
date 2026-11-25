@@ -88,7 +88,7 @@
 .hero__title {
   margin-top: 23px;
   color: var(--navy-800);
-  font-size: 48px;
+  font-size: 38px;
   line-height: 1.02;
   font-weight: 700;
   letter-spacing: -1.2px;
@@ -102,6 +102,13 @@
 
 .hero__lead strong {
   color: var(--green-600);
+}
+
+.hero__sub {
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .hero__actions {
@@ -143,15 +150,19 @@
   }
 
   .hero__title {
-    max-width: 490px;
-    font-size: 72px;
-    letter-spacing: -1.8px;
+    max-width: 560px;
+    font-size: 54px;
+    letter-spacing: -1.4px;
   }
 
   .hero__lead {
-    max-width: 448px;
-    font-size: 23.8px;
-    line-height: 32px;
+    max-width: 480px;
+    font-size: 21px;
+    line-height: 30px;
+  }
+
+  .hero__sub {
+    max-width: 480px;
   }
 
   .hero__actions {
@@ -400,6 +411,11 @@
   font-size: 14px;
   line-height: 20px;
   text-align: center;
+}
+
+.site-footer__copy a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 @media (min-width: 1100px) {

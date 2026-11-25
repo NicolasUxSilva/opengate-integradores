@@ -41,6 +41,8 @@ const mainJs = readFileSync(resolve(ROOT, 'js/main.js'), 'utf8');
 if ((mainJs.match(/trackLead\(\)/g) || []).length !== 2) errors.push('Meta Pixel: trackLead() deve ser chamado em um único ponto (após sucesso)');
 
 // ---------- WhatsApp / telefone ----------
+if (!/name="consentimento"[^>]*\srequired/.test(html)) errors.push('formulário: consentimento LGPD obrigatório ausente');
+if (!existsSync(resolve(ROOT, 'privacidade/index.html'))) errors.push('privacidade/index.html não encontrado');
 if (!/id="whatsapp"[^>]*\srequired/.test(html)) errors.push('formulário: campo whatsapp obrigatório ausente');
 const phoneCases = [
   // [entrada, válido?, máscara esperada]
@@ -64,7 +66,7 @@ for (const [input, valid, mask] of phoneCases) {
 }
 if (phoneDigits('+55 (11) 91234-5678 ramal 99').length > 11) errors.push('telefone: phoneDigits deve limitar a 11 dígitos');
 
-const jsFiles = ['js/main.js', 'js/phone.js', 'js/calculator.js', 'js/calculator-config.js', 'js/calculator-ui.js', 'scripts/serve.mjs'];
+const jsFiles = ['js/main.js', 'js/phone.js', 'js/utm.js', 'js/calculator.js', 'js/calculator-config.js', 'js/calculator-ui.js', 'scripts/serve.mjs'];
 for (const file of jsFiles) {
   try {
     execFileSync(process.execPath, ['--check', resolve(ROOT, file)], { stdio: 'pipe' });
@@ -73,7 +75,7 @@ for (const file of jsFiles) {
   }
 }
 
-const css = ['css/tokens.css', 'css/base.css', 'css/sections.css', 'css/calculator.css', 'css/form.css'];
+const css = ['css/tokens.css', 'css/base.css', 'css/sections.css', 'css/calculator.css', 'css/form.css', 'css/legal.css'];
 for (const file of css) {
   const src = readFileSync(resolve(ROOT, file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const open = (src.match(/{/g) || []).length;

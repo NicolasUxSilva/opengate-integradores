@@ -25,7 +25,15 @@ async function fill(page) {
   await page.fill('#nome', 'TESTE automatizado - nao contatar');
   await page.fill('#empresa', 'TESTE Empresa Ficticia');
   await page.locator('#whatsapp').pressSequentially('11912345678');
+  await page.fill('#cidade', 'Salvador / BA');
   await page.locator('label.option', { hasText: 'Sim' }).first().click();
+  await page.check('input[name="consentimento"]');
+}
+
+async function answerAll(page, value) {
+  for (const name of ['receita_recorrente', 'seguranca_eletronica', 'carteira_clientes']) {
+    await page.locator(`input[name="${name}"][value="${value}"]`).check({ force: true });
+  }
 }
 
 test('PageView único com o Pixel correto, sem Lead no carregamento e sem erros', async ({ page }) => {
@@ -102,6 +110,11 @@ test('envio confirmado: WhatsApp no e-mail e exatamente um Lead, mesmo com cliqu
   await page.waitForTimeout(500);
   expect(posts).toHaveLength(1);
   expect(posts[0]['WhatsApp / telefone']).toBe('(11) 91234-5678');
+  expect(posts[0]['Cidade / UF']).toBe('Salvador / BA');
+  expect(posts[0]['Consentimento LGPD']).toMatch(/^Sim \(/);
+  expect(posts[0]['Página']).toBe('lp-integradores');
+  expect(posts[0].utm_source).toBe('meta');
+  expect(posts[0].utm_campaign).toBe('integradores');
   expect(posts[0]['Nome completo']).toBe('TESTE automatizado - nao contatar');
   expect(await events(page)).toEqual(['PageView', 'Lead']);
   const lead = await page.evaluate(() => window.__fbqCalls.find((c) => c[1] === 'Lead'));
@@ -129,4 +142,54 @@ test('formulário sem rolagem horizontal e campo de WhatsApp visível', async ({
   await expect(page.locator('#whatsapp')).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test('sem consentimento LGPD: nenhum envio e nenhum Lead', async ({ page }) => {
+  const posts = await setup(page, { web3: 'ok' });
+  await page.goto('/');
+  await fill(page);
+  await page.uncheck('input[name="consentimento"]');
+  await submit(page);
+  await page.waitForTimeout(500);
+  expect(posts).toHaveLength(0);
+  expect(await events(page)).toEqual(['PageView']);
+});
+
+test('LeadQualificado só quando as 3 respostas são Sim, sempre depois do Lead', async ({ page }) => {
+  const posts = await setup(page, { web3: 'ok' });
+  await page.goto('/?utm_source=meta&utm_medium=paid&utm_campaign=Integradores&utm_content=OpenGate%20%7C%20Integradores&utm_term=Integradores');
+  await fill(page);
+  await answerAll(page, 'Sim');
+  await submit(page);
+  await expect(page.locator('[data-form-status]')).toHaveAttribute('data-state', 'success');
+  expect(await events(page)).toEqual(['PageView', 'Lead', 'LeadQualificado']);
+  const calls = await page.evaluate(() => window.__fbqCalls.filter((c) => c[1] === 'Lead' || c[1] === 'LeadQualificado'));
+  expect(calls[1][0]).toBe('trackCustom');
+  expect(calls[1][3].eventID).toBe(`${calls[0][3].eventID}-q`);
+  expect(posts[0]['Perfil (3 respostas Sim)']).toBe('Sim');
+  expect(posts[0].utm_content).toBe('OpenGate | Integradores');
+  expect(posts[0].utm_term).toBe('Integradores');
+  // Um novo envio na mesma aba mantém a origem nos campos ocultos
+  expect(await page.inputValue('input[name="utm_source"]')).toBe('meta');
+});
+
+test('sem as 3 respostas Sim: só Lead, sem LeadQualificado', async ({ page }) => {
+  await setup(page, { web3: 'ok' });
+  await page.goto('/');
+  await fill(page);
+  await answerAll(page, 'Sim');
+  await page.locator('input[name="carteira_clientes"][value="Não"]').check({ force: true });
+  await submit(page);
+  await expect(page.locator('[data-form-status]')).toHaveAttribute('data-state', 'success');
+  expect(await events(page)).toEqual(['PageView', 'Lead']);
+});
+
+test('página de privacidade abre e o consentimento aponta para ela', async ({ page }) => {
+  await setup(page);
+  await page.goto('/');
+  const href = await page.locator('.consent a').getAttribute('href');
+  const response = await page.goto(new URL(href, page.url()).toString());
+  expect(response.status()).toBe(200);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Política de Privacidade');
+  await expect(page.getByText('Exclusão de dados')).toBeVisible();
 });

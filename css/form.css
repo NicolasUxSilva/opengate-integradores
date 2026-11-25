@@ -237,6 +237,35 @@
   opacity: 0;
 }
 
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 28px;
+  color: var(--text-body);
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.consent input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  accent-color: var(--green-600);
+}
+
+.consent a,
+.form-privacy a {
+  color: var(--navy-form);
+  text-decoration: underline;
+}
+
+.consent + .form-honeypot + .submit-button {
+  margin-top: 24px;
+}
+
 .form-privacy {
   margin: 14px 0 0;
   color: #6b7f99;
@@ -299,10 +328,7 @@
     margin-bottom: 42px;
   }
 
-  /* WhatsApp ocupa a linha inteira abaixo de Nome e Empresa. */
-  .top-fields .field-group:nth-child(3) {
-    grid-column: 1 / -1;
-  }
+  /* Nome | Empresa na primeira linha; WhatsApp | Cidade na segunda. */
 
   .field-group {
     gap: 10px;

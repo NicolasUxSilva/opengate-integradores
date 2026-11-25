@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Programa de Parceiros OpenGate</title>
-  <meta name="description" content="Você atua com segurança eletrônica e tem clientes? Descubra uma nova fonte de receita recorrente com o Programa de Parceiros OpenGate.">
+  <meta name="description" content="Integrador de segurança eletrônica: os imóveis de temporada da sua região precisam de gestão de acesso. Instale a OpenGate e ganhe com a instalação e a mensalidade.">
   <link rel="icon" href="assets/favicon.png" type="image/png">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
@@ -102,12 +102,13 @@
       <div class="hero__glow" aria-hidden="true"></div>
       <div class="container hero__inner">
         <div class="hero__content">
-          <span class="badge">Programa de Parceiros OpenGate</span>
-          <h1 class="hero__title">Você atua com segurança eletrônica e tem clientes?</h1>
-          <p class="hero__lead">Descubra uma nova fonte de receita com a <strong>OpenGate</strong>.</p>
+          <span class="badge">Para integradores</span>
+          <h1 class="hero__title">Os imóveis de temporada da sua região precisam de gestão de acesso.</h1>
+          <p class="hero__lead">Você instala a <strong>OpenGate</strong> em casas de temporada, pousadas e condomínios e ganha com a <strong>instalação e a mensalidade</strong> de cada aparelho ativo.</p>
+          <p class="hero__sub">Para quem já atende condomínios, administradoras e empresas e quer somar receita recorrente à carteira.</p>
           <div class="hero__actions">
             <a class="btn btn--lg" href="#seja-parceiro" data-cta="hero">
-              Quero saber mais
+              Quero ser parceiro
               <svg aria-hidden="true"><use href="#icon-arrow"/></svg>
             </a>
             <span class="hero__note">Sem custo para começar</span>
@@ -276,8 +277,8 @@
             </div>
             <ul class="profile-card__list">
               <li><svg aria-hidden="true"><use href="#icon-check"/></svg>Você já instala fechaduras, câmeras, alarmes ou controle de acesso.</li>
-              <li><svg aria-hidden="true"><use href="#icon-check"/></svg>Você tem uma carteira de clientes em hospedagem, condomínios ou empresas.</li>
-              <li><svg aria-hidden="true"><use href="#icon-check"/></svg>Você quer uma receita recorrente além da venda de equipamentos.</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg>Você tem uma carteira de clientes em condomínios, administradoras, hospedagem ou empresas.</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg>Você já trabalha com contratos recorrentes (locação, monitoramento ou manutenção) ou quer começar.</li>
               <li><svg aria-hidden="true"><use href="#icon-check"/></svg>Você valoriza suporte técnico e uma plataforma que realmente funciona.</li>
             </ul>
           </article>
@@ -373,6 +374,10 @@
                   <input class="text-input" id="whatsapp" type="tel" name="whatsapp" inputmode="tel" autocomplete="tel-national" placeholder="(11) 91234-5678" maxlength="20" aria-describedby="whatsapp-hint" required>
                   <p class="field-hint" id="whatsapp-hint">Com DDD. É por aqui que nossa equipe vai falar com você.</p>
                 </div>
+                <div class="field-group">
+                  <label class="field-label" for="cidade">Cidade / UF onde você atende</label>
+                  <input class="text-input" id="cidade" type="text" name="cidade" autocomplete="address-level2" placeholder="Ex.: Salvador / BA" maxlength="80" required>
+                </div>
               </div>
 
               <div class="questions">
@@ -399,6 +404,19 @@
                 </div>
               </div>
 
+              <!-- Origem do lead (preenchidos por js/utm.js a partir da URL de entrada). -->
+              <input type="hidden" name="utm_source">
+              <input type="hidden" name="utm_medium">
+              <input type="hidden" name="utm_campaign">
+              <input type="hidden" name="utm_content">
+              <input type="hidden" name="utm_term">
+              <input type="hidden" name="origem">
+
+              <label class="consent">
+                <input type="checkbox" name="consentimento" value="Sim" required>
+                <span>Li a <a href="privacidade/" target="_blank" rel="noopener">Política de Privacidade</a> e autorizo a OpenGate a entrar em contato comigo sobre o Programa de Parceiros.</span>
+              </label>
+
               <!-- Armadilha anti-spam do Web3Forms: pessoas não veem nem preenchem este campo. -->
               <input class="form-honeypot" type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
 
@@ -407,7 +425,7 @@
                 <span class="arrow" aria-hidden="true">→</span>
               </button>
 
-              <p class="form-privacy">Seus dados serão usados apenas para a equipe da OpenGate entrar em contato sobre o Programa de Parceiros.</p>
+              <p class="form-privacy">Seus dados serão usados apenas para a equipe da OpenGate entrar em contato sobre o Programa de Parceiros. <a href="privacidade/">Política de Privacidade</a></p>
 
               <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
             </form>
@@ -424,7 +442,7 @@
       <div class="site-footer__logo">
         <img src="assets/img/logo-opengate-footer.png" alt="OpenGate" width="240" height="55">
       </div>
-      <p class="site-footer__copy">© 2026 OpenGate — Todos os direitos reservados.</p>
+      <p class="site-footer__copy">© 2026 OpenGate — Todos os direitos reservados. · <a href="privacidade/">Política de Privacidade</a></p>
     </div>
   </footer>
 

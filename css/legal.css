@@ -1,0 +1,55 @@
+/* =========================================
+   PÁGINA LEGAL (privacidade/)
+========================================= */
+
+.legal {
+  padding: calc(var(--header-h) + 48px) 0 var(--section-pad);
+}
+
+.legal__inner {
+  max-width: 760px;
+}
+
+.legal h1 {
+  color: var(--navy-800);
+  font-size: 36px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.legal__meta {
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.legal h2 {
+  margin-top: 40px;
+  color: var(--navy-800);
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.legal p,
+.legal li {
+  margin-top: 12px;
+  color: var(--text-body);
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.legal ul {
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.legal a {
+  color: var(--navy-700);
+  text-decoration: underline;
+}
+
+.legal__back {
+  margin-top: 48px;
+}
